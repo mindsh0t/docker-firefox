@@ -5,13 +5,13 @@
 #
 
 # Pull base image.
-FROM jlesage/baseimage-gui:alpine-3.10-v3.5.3
+FROM jlesage/baseimage-gui:alpine-3.8-v3.5.3
 
 # Docker image version is provided via build arg.
 ARG DOCKER_IMAGE_VERSION=unknown
 
 # Define software versions.
-ARG FIREFOX_VERSION=75.0-r2
+ARG FIREFOX_VERSION=52.9.0-r0
 ARG JSONLZ4_VERSION=c4305b8
 ARG LZ4_VERSION=1.8.1.2
 #ARG PROFILE_CLEANER_VERSION=2.36
@@ -49,9 +49,7 @@ RUN \
 
 # Install Firefox.
 RUN \
-    add-pkg --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
-            --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
-            --upgrade firefox=${FIREFOX_VERSION}
+add-pkg firefox-esr=${FIREFOX_VERSION}
 
 # Install extra packages.
 RUN \
@@ -65,7 +63,7 @@ RUN \
 
 # Set default settings.
 RUN \
-    CFG_FILE="$(ls /usr/lib/firefox/browser/defaults/preferences/firefox-branding.js)" && \
+CFG_FILE="$(ls /usr/lib/firefox-*/browser/defaults/preferences/firefox-branding.js)" && \
     echo '' >> "$CFG_FILE" && \
     echo '// Default download directory.' >> "$CFG_FILE" && \
     echo 'pref("browser.download.dir", "/config/downloads");' >> "$CFG_FILE" && \
